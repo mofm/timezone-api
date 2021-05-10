@@ -29,7 +29,7 @@ API urls must follow this format:
         - 400: missing parameter(s)
         - 422: out of bounds error
 
-### API Health
+## API Health
 
 To check the API status or health
 
@@ -40,7 +40,7 @@ To check the API status or health
 **Response:**
 OK
 
-### API Info
+## API Info
 
 For information about API
 
