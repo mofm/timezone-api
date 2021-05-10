@@ -17,7 +17,7 @@ Parameters are separated using the ampersand(&) character.
 
 API urls must follow this format:
 
-`https://api.example.com/timezone/api/?lng=13.358&lat=52.5061`
+`https://api.example.com/timezone/api?lng=13.358&lat=52.5061`
 
 **Response:**
 
