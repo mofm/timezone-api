@@ -8,8 +8,8 @@ latitude and longtitude pair.
 
 Parameters are separated using the ampersand(&) character.
 
-* lat: latitude (eg. lat=52.5061) (Required)
-* lng: longtitude (eg. lng=13.358) (Required)
+* **lat**: latitude (eg. lat=52.5061) _(Required)_
+* **lng**: longtitude (eg. lng=13.358) _(Required)_
 
 ### Example Request
 
@@ -55,3 +55,17 @@ For information about API
     - debug: APP debug status
     - running-since: API start time
     - version: API version
+
+## Installation
+
+* Clone this repostory
+
+`git clone https://github.com/mofm/timezone-api.git`
+
+* Build Docker image
+
+`docker build -t timezone-img .`
+
+* Running Docker image
+
+ `docker run -d -p 8080:8000 --name timezone-api timezone-img`
