@@ -8,12 +8,21 @@ import flask
 from flask import Flask, request, jsonify
 from timezonefinder import TimezoneFinderL
 
-app = Flask(__name__)
-api = Api(app)
 
-parser = reqparse.RequestParser()
-parser.add_argument('lat', type=float, required=True, location='args')
-parser.add_argument('lng', type=float, required=True, location='args')
+# Version of this APP template
+__version__ = '0.0.1'
+# Read env variables
+SERVICE_START_TIMESTAMP = time()
+DEBUG = os.environ.get('DEBUG', False)
+
+
+app = Flask(__name__)
+# Gunicorn log level as Flask's log level
+if __name__ != '__main__':
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+
 
 @app.route('/timezone/api/', methods=['GET'])
 def get_timezone():
@@ -39,7 +48,22 @@ def get_timezone():
         return jsonify(message="lat lng out of bounds", status=422)
 
 
-api.add_resource(timezone, '/')
+@app.route('/timezone/health/', methods=['GET'])
+def health_check():
+    """api status"""
+    return flask.Response("OK", status=200)
+
+
+@app.route('/timezone/info/', methods=['GET'])
+def api_info():
+    """api infos"""
+    info = {
+        'version':  __version__,
+        'running-since': SERVICE_START_TIMESTAMP,
+        'debug': DEBUG
+    }
+    return jsonify(info)
+
 
 if __name__ == '__main__':
     app.run()
