@@ -34,7 +34,7 @@ def get_timezone():
     if (None not in {lat, lng, tstamp}) and (0 not in {len(lat), len(lng), len(tstamp)}):
         pass
     else:
-        return jsonify(message="missing required argument(s)", status=400)
+        return jsonify(message="Missing required argument(s)", status=400)
     try:
         lng, lat = float(lng), float(lat)
         tstamp = int(tstamp)
@@ -42,10 +42,10 @@ def get_timezone():
         tz = pytz.timezone(tzone)
         tz_time = datetime.fromtimestamp(tstamp)
         dst_offset = tz.dst(tz_time, is_dst=False).total_seconds()
-        return jsonify({'dstOffset': dst_offset, 'tzname': tzone, 'status': 200})
+        return jsonify({'dstoffset': dst_offset, 'tzname': tzone, 'status': 200})
 
     except ValueError:
-        return jsonify(message="lat lng out of bounds", status=422)
+        return jsonify(message="Parameter(s) out of bounds", status=422)
 
 
 @app.route('/timezone/health/', methods=['GET'])

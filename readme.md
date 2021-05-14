@@ -10,6 +10,7 @@ Parameters are separated using the ampersand(&) character.
 
 * **lat**: latitude (eg. lat=52.5061) _(Required)_
 * **lng**: longtitude (eg. lng=13.358) _(Required)_
+* **timestamp**: timestamp (eg. timestamp=1331161200) _(Required)_
 
 ### Example Request
 
@@ -17,13 +18,17 @@ Parameters are separated using the ampersand(&) character.
 
 API urls must follow this format:
 
-`https://api.example.com/timezone/api?lng=13.358&lat=52.5061`
+`https://api.example.com/timezone/api?lng=13.358&lat=52.5061&timestamp=1331161200`
 
 **Response:**
 
 `{"status":200,"tz_name":"Europe/Berlin"}`
 
-    - tz_name: Timezone name
+    - tzname: Timezone name
+    - dstoffset: the offset for daylight-savings time in seconds.
+    This will be zero if the time zone is not in Daylight Savings Time during the specified timestamp.
+    - rawoffset: the offset from UTC (in seconds) for the given location.
+    This does not take into effect daylight savings.
     - status: response code
         - 200: the request was successful
         - 400: missing parameter(s)
