@@ -1,27 +1,25 @@
-# pull official base image
-FROM python:3.9.5-slim-buster
+# Build a virtualenv using the appropriate Debian release
+# * Install python3-venv for the built-in Python3 venv module (not installed by default)
+# * Install gcc libpython3-dev to compile C Python modules
+# * Update pip to support bdist_wheel
+FROM debian:buster-slim AS build
+RUN apt-get update && \
+    apt-get install --no-install-suggests --no-install-recommends --yes python3-venv gcc libpython3-dev && \
+    python3 -m venv /venv && \
+    /venv/bin/pip install --upgrade pip
 
-LABEL maintainer="emre.eryilmaz@piesso.com"
-LABEL version="0.1"
-LABEL description="Timezone-api wit Flask and \
-TimezoneFinderL"
+# Build the virtualenv as a separate step: Only re-execute this step when requirements.txt changes
+FROM build AS build-venv
+COPY requirements.txt /requirements.txt
+RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
 
-# set work directory
-WORKDIR /usr/src/app
-
-# set environment variables
+# Copy the virtualenv into a distroless image
+FROM gcr.io/distroless/python3-debian10
+COPY --from=build-venv /venv /venv
+COPY . /app
+WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV FLASK_ENV=development
 ENV FLASK_APP=app.py
-
-# install dependencies
-RUN pip install --upgrade pip
-COPY ./requirements.txt /usr/src/app/requirements.txt
-RUN pip install -r requirements.txt
-
-# copy project
-COPY . /usr/src/app/
-
-# run entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+ENTRYPOINT ["/venv/bin/gunicorn", "app:app", "-w", "2", "--threads", "2", "-b", "0.0.0.0:8000", "-t", "60"]

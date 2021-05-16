@@ -2,13 +2,15 @@
 import os
 import logging
 from time import time
+from datetime import datetime
+import pytz
 import flask
 from flask import Flask, request, jsonify
 from timezonefinder import TimezoneFinderL
 
 
 # Version of this APP template
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 # Read env variables
 SERVICE_START_TIMESTAMP = time()
 DEBUG = os.environ.get('DEBUG', False)
@@ -27,16 +29,27 @@ def get_timezone():
     """check values and search timezones."""
     lat = request.args.get('lat')
     lng = request.args.get('lng')
-    tifi = TimezoneFinderL(in_memory=True)
-    if (lat and lng is not None) and (len(lat) and len(lng) != 0):
+    tstamp = request.args.get('timestamp')
+    tfind = TimezoneFinderL(in_memory=True)
+    if (None not in {lat, lng, tstamp}) and (0 not in {len(lat), len(lng), len(tstamp)}):
         pass
     else:
-        return jsonify(message="No latitude or longitude values", status=400)
+        return jsonify(message="Missing required argument(s)", status=400)
     try:
         lng, lat = float(lng), float(lat)
-        return jsonify({'tz_name': tifi.timezone_at(lng=lng, lat=lat), 'status': 200})
+        tstamp = int(tstamp)
+        tzone = tfind.timezone_at(lng=lng, lat=lat)
+        tz = pytz.timezone(tzone)
+        tz_time = datetime.fromtimestamp(tstamp)
+        dst_offset = tz.dst(tz_time, is_dst=False).total_seconds()
+        raw_dt = datetime(2021, 1, 1, 1)
+        raw_offset = tz.utcoffset(raw_dt, is_dst=False).total_seconds()
+        return jsonify({'dstoffset': dst_offset,
+                        'rawoffset': raw_offset,
+                        'tzname': tzone, 'status': 200})
+
     except ValueError:
-        return jsonify(message="lat lng out of bounds", status=422)
+        return jsonify(message="Parameter(s) out of bounds", status=422)
 
 
 @app.route('/timezone/health/', methods=['GET'])
