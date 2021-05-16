@@ -8,8 +8,8 @@ latitude and longtitude pair.
 
 Parameters are separated using the ampersand(&) character.
 
-* **lat**: latitude (eg. lat=52.5061) _(Required)_
-* **lng**: longtitude (eg. lng=13.358) _(Required)_
+* **lat**: latitude (eg. lat=39.6034810) _(Required)_
+* **lng**: longtitude (eg. lng=-119.6822510) _(Required)_
 * **timestamp**: timestamp (eg. timestamp=1331161200) _(Required)_
 
 ### Example Request
@@ -18,11 +18,11 @@ Parameters are separated using the ampersand(&) character.
 
 API urls must follow this format:
 
-`https://api.example.com/timezone/api?lng=13.358&lat=52.5061&timestamp=1331161200`
+`https://api.example.com/timezone/api?lng=-119.6822510&lat=39.6034810&timestamp=1331766000`
 
 **Response:**
 
-`{"status":200,"tz_name":"Europe/Berlin"}`
+`{"dstoffset":3600.0,"rawoffset":-28800.0,"status":200,"tzname":"America/Los_Angeles"}`
 
     - tzname: Timezone name
     - dstoffset: the offset for daylight-savings time in seconds.
@@ -67,8 +67,8 @@ For information about API
 
 `git clone https://github.com/mofm/timezone-api.git`
 
-* Build Docker image
-
+* Build Docker image (slim image with Google Distroless)
+  
 `docker build -t timezone-img .`
 
 * Running Docker image

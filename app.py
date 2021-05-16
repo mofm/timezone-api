@@ -10,7 +10,7 @@ from timezonefinder import TimezoneFinderL
 
 
 # Version of this APP template
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 # Read env variables
 SERVICE_START_TIMESTAMP = time()
 DEBUG = os.environ.get('DEBUG', False)
@@ -42,7 +42,11 @@ def get_timezone():
         tz = pytz.timezone(tzone)
         tz_time = datetime.fromtimestamp(tstamp)
         dst_offset = tz.dst(tz_time, is_dst=False).total_seconds()
-        return jsonify({'dstoffset': dst_offset, 'tzname': tzone, 'status': 200})
+        raw_dt = datetime(2021, 1, 1, 1)
+        raw_offset = tz.utcoffset(raw_dt, is_dst=False).total_seconds()
+        return jsonify({'dstoffset': dst_offset,
+                        'rawoffset': raw_offset,
+                        'tzname': tzone, 'status': 200})
 
     except ValueError:
         return jsonify(message="Parameter(s) out of bounds", status=422)
