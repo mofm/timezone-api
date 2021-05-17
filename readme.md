@@ -63,21 +63,38 @@ For information about API
 
 ## Installation
 
+### I. Method: From Docker Hub
+
+`$ docker run -d -p 8080:8000 --name timezone-35 mofm/timezone-api`
+
+* Test
+
+$ curl --request GET  "http://127.0.0.1:8080/timezone/api/?lng=-119.6822510&lat=39.6034810&timestamp=1331766000"
+
+`{
+  "dstoffset": 3600.0, 
+  "rawoffset": -28800.0, 
+  "status": 200, 
+  "tzname": "America/Los_Angeles"
+}`
+
+### II. Method: Build Docker image
+
 * Clone this repostory
 
-`$ git clone https://github.com/mofm/timezone-api.git`
+`git clone https://github.com/mofm/timezone-api.git`
 
 * Build Docker image (slim image with Google Distroless)
   
-`$ docker build -t timezone-img .`
+`docker build -t timezone-img .`
 
 * Running Docker image
 
- `$ docker run -d -p 8080:8000 --name timezone-api timezone-img`
+ `docker run -d -p 8080:8000 --name timezone-api ti
  
 * Test
 
-`$ curl --request GET  "http://127.0.0.1:8080/timezone/api/?lng=-119.6822510&lat=39.6034810&timestamp=1331766000"`
+$ curl --request GET  "http://127.0.0.1:8080/timezone/api/?lng=-119.6822510&lat=39.6034810&timestamp=1331766000"
 
 `{
   "dstoffset": 3600.0, 
