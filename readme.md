@@ -73,4 +73,15 @@ For information about API
 
 * Running Docker image
 
- `docker run -d -p 8080:8000 --name timezone-api timezone-img`
+ `docker run -d -p 8080:8000 --name timezone-api ti
+ 
+* Test
+
+$ curl --request GET  "http://127.0.0.1:8080/timezone/api/?lng=-119.6822510&lat=39.6034810&timestamp=1331766000"
+
+`{
+  "dstoffset": 3600.0, 
+  "rawoffset": -28800.0, 
+  "status": 200, 
+  "tzname": "America/Los_Angeles"
+}`
