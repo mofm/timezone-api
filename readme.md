@@ -65,19 +65,19 @@ For information about API
 
 * Clone this repostory
 
-`git clone https://github.com/mofm/timezone-api.git`
+`$ git clone https://github.com/mofm/timezone-api.git`
 
 * Build Docker image (slim image with Google Distroless)
   
-`docker build -t timezone-img .`
+`$ docker build -t timezone-img .`
 
 * Running Docker image
 
- `docker run -d -p 8080:8000 --name timezone-api ti
+ `$ docker run -d -p 8080:8000 --name timezone-api timezone-img`
  
 * Test
 
-$ curl --request GET  "http://127.0.0.1:8080/timezone/api/?lng=-119.6822510&lat=39.6034810&timestamp=1331766000"
+`$ curl --request GET  "http://127.0.0.1:8080/timezone/api/?lng=-119.6822510&lat=39.6034810&timestamp=1331766000"`
 
 `{
   "dstoffset": 3600.0, 
